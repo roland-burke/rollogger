@@ -55,7 +55,7 @@ func TestLogLevels(t *testing.T) {
 }
 
 func TestPrintFileName(t *testing.T) {
-	const fileName = "rolloger.go"
+	const fileName = "rollogger.go"
 
 	var log = Init(LEVEL_INFO, false, false)
 	log.Info("test_log_1")
