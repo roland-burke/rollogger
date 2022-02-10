@@ -2,8 +2,6 @@ package rollogger
 
 import (
 	"fmt"
-	"runtime"
-	"strings"
 	"time"
 )
 
@@ -24,18 +22,16 @@ const (
 )
 
 type Log struct {
-	rootLevel     int
-	printFileName bool
-	colorLogs     bool
-	lastLog       string
+	rootLevel int
+	colorLogs bool
+	lastLog   string
 }
 
-func Init(level int, printFileName bool, colorLogs bool) *Log {
+func Init(level int, colorLogs bool) *Log {
 	return &Log{
-		rootLevel:     level,
-		printFileName: printFileName,
-		colorLogs:     colorLogs,
-		lastLog:       "",
+		rootLevel: level,
+		colorLogs: colorLogs,
+		lastLog:   "",
 	}
 }
 
@@ -89,27 +85,8 @@ func truncateString(maxLength int, msg string) string {
 	return msg
 }
 
-func getFileNameString(colorLogs bool) string {
-	_, file, _, ok := runtime.Caller(1)
-	if ok {
-		var filePath = strings.Split(file, "/")
-		var fileName = filePath[len(filePath)-1]
-
-		if colorLogs {
-			return fmt.Sprintf("\033[32m%s\033[0m: ", truncateString(MAX_FILE_NAME_LENGTH, fileName))
-		} else {
-			return fmt.Sprintf("%s: ", truncateString(MAX_FILE_NAME_LENGTH, fileName))
-		}
-	}
-	return ""
-}
-
 func write(msgLevel int, msg string, l *Log) {
 	var fileName = ""
-
-	if l.printFileName {
-		fileName = getFileNameString(l.colorLogs)
-	}
 
 	if l.colorLogs {
 		l.lastLog = fmt.Sprintf("%s %s[%-5s]\033[0m %s%s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_COLORS[msgLevel], LEVEL_NAMES[msgLevel], fileName, truncateString(MAX_LOG_MSG_LENGTH, msg))

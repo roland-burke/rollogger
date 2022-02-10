@@ -7,7 +7,7 @@ import (
 
 func TestLogLevels(t *testing.T) {
 	for i := -1; i < 6; i++ {
-		var log = Init(i, false, false)
+		var log = Init(i, false)
 
 		var logMessages = [5]string{"", "", "", "", ""}
 
@@ -54,30 +54,10 @@ func TestLogLevels(t *testing.T) {
 	}
 }
 
-func TestPrintFileName(t *testing.T) {
-	const fileName = "rollogger.go"
-
-	var log = Init(LEVEL_INFO, false, false)
-	log.Info("test_log_1")
-	var logMsgWithoutFile = log.GetLastLog()
-
-	if strings.Contains(logMsgWithoutFile, fileName) {
-		t.Errorf("Got: %s, expected no fileName", logMsgWithoutFile)
-	}
-
-	log = Init(LEVEL_INFO, true, false)
-	log.Info("test_log_2")
-	var logMsgWithFile = log.GetLastLog()
-
-	if !strings.Contains(logMsgWithFile, fileName) {
-		t.Errorf("Got: %s, expected fileName: %s", logMsgWithFile, fileName)
-	}
-}
-
 func TestColoredLogs(t *testing.T) {
 	const infoColor = "\033[36m"
 
-	var log = Init(LEVEL_INFO, false, false)
+	var log = Init(LEVEL_INFO, false)
 	log.Info("test_log_without_color")
 	var logMsgWithoutColor = log.GetLastLog()
 
@@ -85,7 +65,7 @@ func TestColoredLogs(t *testing.T) {
 		t.Errorf("Got: %s, expected no color", logMsgWithoutColor)
 	}
 
-	log = Init(LEVEL_INFO, false, true)
+	log = Init(LEVEL_INFO, true)
 	log.Info("test_log_with_color")
 	var logMsgWithColor = log.GetLastLog()
 
@@ -144,7 +124,7 @@ func TestTruncateString(t *testing.T) {
 }
 
 func TestGetCurrentLogLevel(t *testing.T) {
-	var log = Init(LEVEL_INFO, false, false)
+	var log = Init(LEVEL_INFO, false)
 
 	var levelNum, levelString = log.GetCurrentLogLevel()
 
@@ -154,7 +134,7 @@ func TestGetCurrentLogLevel(t *testing.T) {
 }
 
 func TestSetCurrentLogLevel(t *testing.T) {
-	var log = Init(LEVEL_INFO, false, false)
+	var log = Init(LEVEL_INFO, false)
 
 	log.SetLogLevel(LEVEL_WARN)
 	var levelNum, _ = log.GetCurrentLogLevel()
@@ -164,7 +144,7 @@ func TestSetCurrentLogLevel(t *testing.T) {
 }
 
 func TestStringParemeter(t *testing.T) {
-	var log = Init(LEVEL_INFO, false, false)
+	var log = Init(LEVEL_INFO, false)
 	const expected = "with parameter: 42, second"
 
 	log.Info("with parameter: %d, %s", 42, "second")
