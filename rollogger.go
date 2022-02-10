@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-var LEVEL_NAMES = [5]string{"ERROR", "WARN", "INFO", "DEBUG", "TRACE"}
+var LEVEL_NAMES = [5]string{"[ERROR]", "[WARN]", "[INFO]", "[DEBUG]", "[TRACE]"}
 var LEVEL_COLORS = [5]string{"\033[31m", "\033[33m", "\033[36m", "", ""}
 
 // The higher the number, the noisier the logger is
@@ -89,9 +89,9 @@ func write(msgLevel int, msg string, l *Log) {
 	var fileName = ""
 
 	if l.colorLogs {
-		l.lastLog = fmt.Sprintf("%s %s[%-5s]\033[0m %s%s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_COLORS[msgLevel], LEVEL_NAMES[msgLevel], fileName, truncateString(MAX_LOG_MSG_LENGTH, msg))
+		l.lastLog = fmt.Sprintf("%s %s%-7s\033[0m %s%s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_COLORS[msgLevel], LEVEL_NAMES[msgLevel], fileName, truncateString(MAX_LOG_MSG_LENGTH, msg))
 	} else {
-		l.lastLog = fmt.Sprintf("%s [%-5s] %s%s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_NAMES[msgLevel], fileName, truncateString(MAX_LOG_MSG_LENGTH, msg))
+		l.lastLog = fmt.Sprintf("%s %-7s %s%s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_NAMES[msgLevel], fileName, truncateString(MAX_LOG_MSG_LENGTH, msg))
 	}
 	fmt.Print(l.lastLog)
 }
