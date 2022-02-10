@@ -118,13 +118,3 @@ func write(msgLevel int, msg string, l *Log) {
 	}
 	fmt.Print(l.lastLog)
 }
-
-func main() {
-	var log = Init(LEVEL_TRACE, true, true)
-	log.Trace("Trace log message")
-	log.Trace("Trace log message %s: %d", "with parameter", 34)
-	log.Debug("Debug log message")
-	log.Info("Info log message")
-	log.Warn("Warn log message")
-	log.Error("Error log message")
-}
