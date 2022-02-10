@@ -39,33 +39,33 @@ func Init(level int, printFileName bool, colorLogs bool) *Log {
 	}
 }
 
-func (l *Log) Trace(msg string) {
+func (l *Log) Trace(msg string, args ...interface{}) {
 	if l.rootLevel >= LEVEL_TRACE {
-		write(LEVEL_TRACE, msg, l)
+		write(LEVEL_TRACE, fmt.Sprintf(msg, args...), l)
 	}
 }
 
-func (l *Log) Debug(msg string) {
+func (l *Log) Debug(msg string, args ...interface{}) {
 	if l.rootLevel >= LEVEL_DEBUG {
-		write(LEVEL_DEBUG, msg, l)
+		write(LEVEL_DEBUG, fmt.Sprintf(msg, args...), l)
 	}
 }
 
-func (l *Log) Info(msg string) {
+func (l *Log) Info(msg string, args ...interface{}) {
 	if l.rootLevel >= LEVEL_INFO {
-		write(LEVEL_INFO, msg, l)
+		write(LEVEL_INFO, fmt.Sprintf(msg, args...), l)
 	}
 }
 
-func (l *Log) Warn(msg string) {
+func (l *Log) Warn(msg string, args ...interface{}) {
 	if l.rootLevel >= LEVEL_WARN {
-		write(LEVEL_WARN, msg, l)
+		write(LEVEL_WARN, fmt.Sprintf(msg, args...), l)
 	}
 }
 
-func (l *Log) Error(msg string) {
+func (l *Log) Error(msg string, args ...interface{}) {
 	if l.rootLevel >= LEVEL_ERROR {
-		write(LEVEL_ERROR, msg, l)
+		write(LEVEL_ERROR, fmt.Sprintf(msg, args...), l)
 	}
 }
 
@@ -122,6 +122,7 @@ func write(msgLevel int, msg string, l *Log) {
 func main() {
 	var log = Init(LEVEL_TRACE, true, true)
 	log.Trace("Trace log message")
+	log.Trace("Trace log message %s: %d", "with parameter", 34)
 	log.Debug("Debug log message")
 	log.Info("Info log message")
 	log.Warn("Warn log message")

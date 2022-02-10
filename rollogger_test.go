@@ -162,3 +162,14 @@ func TestSetCurrentLogLevel(t *testing.T) {
 		t.Errorf("Got: %d expected: %d", levelNum, LEVEL_WARN)
 	}
 }
+
+func TestStringParemeter(t *testing.T) {
+	var log = Init(LEVEL_INFO, false, false)
+	const expected = "with parameter: 42, second"
+
+	log.Info("with parameter: %d, %s", 42, "second")
+	var msg = log.GetLastLog()
+	if !strings.Contains(msg, expected) {
+		t.Errorf("Got: %s expected: %s", msg, expected)
+	}
+}
