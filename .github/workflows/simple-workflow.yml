@@ -1,4 +1,4 @@
-name: Rollogger CI Workflow
+name: Build and Test
 on: [push, pull_request]
 jobs:
   build-and-test:

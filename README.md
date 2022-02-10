@@ -1,7 +1,7 @@
 # rollogger
-Simple Logger written in GO
+![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg)
 
-![example workflow](https://github.com/roland-burke/rollogger/actions/workflows/default-workflow.yml/badge.svg)
+Simple Logger written in GO
 
 ## Install
 
