@@ -3,7 +3,7 @@ Simple Logger written in GO
 
 ## Install
 
-`go get -u github.com/roland-burke/rollogger`
+`go get -d -u github.com/roland-burke/rollogger`
 
 ## Usage
 
