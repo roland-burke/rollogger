@@ -1,6 +1,8 @@
 # rollogger
 Simple Logger written in GO
 
+![example workflow](https://github.com/roland-burke/rollogger/actions/workflows/default-workflow.yml/badge.svg)
+
 ## Install
 
 `go get -d -u github.com/roland-burke/rollogger`

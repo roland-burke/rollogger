@@ -1,5 +1,5 @@
-name: GitHub Actions Demo
-on: [push]
+name: Rollogger CI Workflow
+on: [push, pull_request]
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -15,4 +15,4 @@ jobs:
         run: go build -v
 
       - name: Test
-        run: go test -cover -v
+        run: go test -v -coverprofile=coverage.out
