@@ -63,6 +63,8 @@ func TestLogLevels(t *testing.T) {
 
 func TestColoredLogs(t *testing.T) {
 	const infoColor = "\033[36m"
+	const warnColor = "\033[33m"
+	const errorColor = "\033[31m"
 
 	var log = Init(INFO_LEVEL, false)
 	log.Info("test_log_without_color")
@@ -78,6 +80,22 @@ func TestColoredLogs(t *testing.T) {
 
 	if !strings.Contains(logMsgWithColor, infoColor) {
 		t.Errorf("Got: %s, expected color: %s", logMsgWithColor, infoColor)
+	}
+
+	log = Init(INFO_LEVEL, true)
+	log.Warn("test_log_with_color_warn")
+	var logMsgWithColorWarn = log.GetLastLog()
+
+	if !strings.Contains(logMsgWithColorWarn, warnColor) {
+		t.Errorf("Got: %s, expected color: %s", logMsgWithColorWarn, warnColor)
+	}
+
+	log = Init(INFO_LEVEL, true)
+	log.Error("test_log_with_color_error")
+	var logMsgWithColorError = log.GetLastLog()
+
+	if !strings.Contains(logMsgWithColorError, errorColor) {
+		t.Errorf("Got: %s, expected color: %s", logMsgWithColorError, errorColor)
 	}
 }
 
