@@ -16,6 +16,16 @@ In addition to the main log functions there are other Functions to interact with
 | GetLastLog() string  			| Returns the latest log message, mainly used for testing.				|
 | SetLogLevel(newLevel int)   		| Sets the current log level.								|
 
+Typical Log functions:
+
+| Syntax      | Description |
+| ----------- | ----------- |
+| Trace(msg string, args ...interface{})	| Logs messages for tracing	|
+| Debug(msg string, args ...interface{})   	| Logs debug messages		|
+| Info(msg string, args ...interface{})  	| Logs info messages		|
+| Warn(msg string, args ...interface{}) 	| Logs warning messages		|
+| Error(msg string, args ...interface{}) 	| Logs error messages		|
+
 
 ## Example
 
