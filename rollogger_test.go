@@ -1,9 +1,16 @@
 package rollogger
 
 import (
+	"math"
 	"strings"
 	"testing"
 )
+
+type Example struct {
+	Value1 int
+	Value2 bool
+	Value3 string
+}
 
 func TestLogLevels(t *testing.T) {
 	for i := -1; i < 6; i++ {
@@ -57,7 +64,7 @@ func TestLogLevels(t *testing.T) {
 func TestColoredLogs(t *testing.T) {
 	const infoColor = "\033[36m"
 
-	var log = Init(LEVEL_INFO, false)
+	var log = Init(INFO_LEVEL, false)
 	log.Info("test_log_without_color")
 	var logMsgWithoutColor = log.GetLastLog()
 
@@ -65,7 +72,7 @@ func TestColoredLogs(t *testing.T) {
 		t.Errorf("Got: %s, expected no color", logMsgWithoutColor)
 	}
 
-	log = Init(LEVEL_INFO, true)
+	log = Init(INFO_LEVEL, true)
 	log.Info("test_log_with_color")
 	var logMsgWithColor = log.GetLastLog()
 
@@ -124,27 +131,27 @@ func TestTruncateString(t *testing.T) {
 }
 
 func TestGetCurrentLogLevel(t *testing.T) {
-	var log = Init(LEVEL_INFO, false)
+	var log = Init(INFO_LEVEL, false)
 
 	var levelNum, levelString = log.GetCurrentLogLevel()
 
-	if levelNum != LEVEL_INFO || levelString != LEVEL_NAMES[2] {
-		t.Errorf("Got: %d, %s expected: %d, %s", levelNum, levelString, LEVEL_INFO, LEVEL_NAMES[2])
+	if levelNum != INFO_LEVEL || levelString != LEVEL_NAMES[2] {
+		t.Errorf("Got: %d, %s expected: %d, %s", levelNum, levelString, INFO_LEVEL, LEVEL_NAMES[2])
 	}
 }
 
 func TestSetCurrentLogLevel(t *testing.T) {
-	var log = Init(LEVEL_INFO, false)
+	var log = Init(INFO_LEVEL, false)
 
-	log.SetLogLevel(LEVEL_WARN)
+	log.SetLogLevel(WARN_LEVEL)
 	var levelNum, _ = log.GetCurrentLogLevel()
-	if levelNum != LEVEL_WARN {
-		t.Errorf("Got: %d expected: %d", levelNum, LEVEL_WARN)
+	if levelNum != WARN_LEVEL {
+		t.Errorf("Got: %d expected: %d", levelNum, WARN_LEVEL)
 	}
 }
 
 func TestStringParemeter(t *testing.T) {
-	var log = Init(LEVEL_INFO, false)
+	var log = Init(INFO_LEVEL, false)
 	const expected = "with parameter: 42, second"
 
 	log.Info("with parameter: %d, %s", 42, "second")
@@ -152,4 +159,72 @@ func TestStringParemeter(t *testing.T) {
 	if !strings.Contains(msg, expected) {
 		t.Errorf("Got: %s expected: %s", msg, expected)
 	}
+}
+
+func TestConvertObjToString(t *testing.T) {
+	var expected = ":\n{\n\t\"Value1\": 42,\n\t\"Value2\": true,\n\t\"Value3\": \"Moin\"\n}"
+	var expected2 = "Error during Marshalling: json: unsupported value: +Inf"
+
+	var exampleObj = Example{
+		Value1: 42,
+		Value2: true,
+		Value3: "Moin",
+	}
+
+	var objString = convertJsonObjectToString(exampleObj)
+
+	if !strings.Contains(objString, expected) {
+		t.Errorf("Got: %s expected: %s", objString, expected)
+	}
+
+	var objString2 = convertJsonObjectToString(math.Inf(1))
+
+	if !strings.Contains(objString2, expected2) {
+		t.Errorf("Got: %s expected: %s", objString2, expected)
+	}
+
+}
+
+func TestLogObjMethods(t *testing.T) {
+	var expected = ":\n{\n\t\"Value1\": 42,\n\t\"Value2\": true,\n\t\"Value3\": \"Moin\"\n}"
+
+	var log = Init(TRACE_LEVEL, false)
+
+	var exampleObj = Example{
+		Value1: 42,
+		Value2: true,
+		Value3: "Moin",
+	}
+
+	log.TraceObj(exampleObj)
+	var lastTrace = log.GetLastLog()
+	log.DebugObj(exampleObj)
+	var lastDebug = log.GetLastLog()
+	log.InfoObj(exampleObj)
+	var lastInfo = log.GetLastLog()
+	log.WarnObj(exampleObj)
+	var lastWarn = log.GetLastLog()
+	log.ErrorObj(exampleObj)
+	var lastError = log.GetLastLog()
+
+	if !strings.Contains(lastTrace, expected) {
+		t.Errorf("Got: %s expected: %s", lastTrace, expected)
+	}
+
+	if !strings.Contains(lastDebug, expected) {
+		t.Errorf("Got: %s expected: %s", lastTrace, expected)
+	}
+
+	if !strings.Contains(lastInfo, expected) {
+		t.Errorf("Got: %s expected: %s", lastInfo, expected)
+	}
+
+	if !strings.Contains(lastWarn, expected) {
+		t.Errorf("Got: %s expected: %s", lastWarn, expected)
+	}
+
+	if !strings.Contains(lastError, expected) {
+		t.Errorf("Got: %s expected: %s", lastError, expected)
+	}
+
 }
