@@ -1,5 +1,5 @@
 # Rollogger
-![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg)
+![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg) ![Go Report](/badge/github.com/roland-burke/rollogger)
 
 Simple Logger written in GO.
 
