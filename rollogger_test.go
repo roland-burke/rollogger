@@ -14,7 +14,7 @@ type Example struct {
 
 func TestLogLevels(t *testing.T) {
 	for i := -1; i < 6; i++ {
-		var log = Init(i, false)
+		var log = Init(i, false, false)
 
 		var logMessages = [5]string{"", "", "", "", ""}
 
@@ -66,7 +66,7 @@ func TestColoredLogs(t *testing.T) {
 	const warnColor = "\033[33m"
 	const errorColor = "\033[31m"
 
-	var log = Init(INFO_LEVEL, false)
+	var log = Init(INFO_LEVEL, false, false)
 	log.Info("test_log_without_color")
 	var logMsgWithoutColor = log.GetLastLog()
 
@@ -74,7 +74,7 @@ func TestColoredLogs(t *testing.T) {
 		t.Errorf("Got: %s, expected no color", logMsgWithoutColor)
 	}
 
-	log = Init(INFO_LEVEL, true)
+	log = Init(INFO_LEVEL, true, false)
 	log.Info("test_log_with_color")
 	var logMsgWithColor = log.GetLastLog()
 
@@ -82,7 +82,7 @@ func TestColoredLogs(t *testing.T) {
 		t.Errorf("Got: %s, expected color: %s", logMsgWithColor, infoColor)
 	}
 
-	log = Init(INFO_LEVEL, true)
+	log = Init(INFO_LEVEL, true, false)
 	log.Warn("test_log_with_color_warn")
 	var logMsgWithColorWarn = log.GetLastLog()
 
@@ -90,7 +90,7 @@ func TestColoredLogs(t *testing.T) {
 		t.Errorf("Got: %s, expected color: %s", logMsgWithColorWarn, warnColor)
 	}
 
-	log = Init(INFO_LEVEL, true)
+	log = Init(INFO_LEVEL, true, false)
 	log.Error("test_log_with_color_error")
 	var logMsgWithColorError = log.GetLastLog()
 
@@ -149,7 +149,7 @@ func TestTruncateString(t *testing.T) {
 }
 
 func TestGetCurrentLogLevel(t *testing.T) {
-	var log = Init(INFO_LEVEL, false)
+	var log = Init(INFO_LEVEL, false, false)
 
 	var levelNum, levelString = log.GetCurrentLogLevel()
 
@@ -159,7 +159,7 @@ func TestGetCurrentLogLevel(t *testing.T) {
 }
 
 func TestSetCurrentLogLevel(t *testing.T) {
-	var log = Init(INFO_LEVEL, false)
+	var log = Init(INFO_LEVEL, false, false)
 
 	log.SetLogLevel(WARN_LEVEL)
 	var levelNum, _ = log.GetCurrentLogLevel()
@@ -168,8 +168,18 @@ func TestSetCurrentLogLevel(t *testing.T) {
 	}
 }
 
+func TestSetPrettyPrintLogLevel(t *testing.T) {
+	var log = Init(INFO_LEVEL, false, false)
+
+	log.SetPrettyPrint(true)
+
+	if !log.jsonPrettyPrint {
+		t.Errorf("Got: %t expected: %t", log.jsonPrettyPrint, true)
+	}
+}
+
 func TestStringParemeter(t *testing.T) {
-	var log = Init(INFO_LEVEL, false)
+	var log = Init(INFO_LEVEL, false, false)
 	const expected = "with parameter: 42, second"
 
 	log.Info("with parameter: %d, %s", 42, "second")
@@ -179,7 +189,7 @@ func TestStringParemeter(t *testing.T) {
 	}
 }
 
-func TestConvertObjToString(t *testing.T) {
+func TestConvertObjToStringPrettyPrint(t *testing.T) {
 	var expected = ":\n{\n\t\"Value1\": 42,\n\t\"Value2\": true,\n\t\"Value3\": \"Moin\"\n}"
 	var expected2 = "Error during Marshalling: json: unsupported value: +Inf"
 
@@ -189,13 +199,13 @@ func TestConvertObjToString(t *testing.T) {
 		Value3: "Moin",
 	}
 
-	var objString = convertJsonObjectToString(exampleObj)
+	var objString = convertJsonObjectToString(exampleObj, true)
 
 	if !strings.Contains(objString, expected) {
 		t.Errorf("Got: %s expected: %s", objString, expected)
 	}
 
-	var objString2 = convertJsonObjectToString(math.Inf(1))
+	var objString2 = convertJsonObjectToString(math.Inf(1), true)
 
 	if !strings.Contains(objString2, expected2) {
 		t.Errorf("Got: %s expected: %s", objString2, expected)
@@ -203,10 +213,34 @@ func TestConvertObjToString(t *testing.T) {
 
 }
 
+func TestConvertObjToStringNormalPrint(t *testing.T) {
+	var expected = "{Value1:42 Value2:true Value3:Moin}"
+	var expected2 = "+Inf"
+
+	var exampleObj = Example{
+		Value1: 42,
+		Value2: true,
+		Value3: "Moin",
+	}
+
+	var objString = convertJsonObjectToString(exampleObj, false)
+
+	if !strings.Contains(objString, expected) {
+		t.Errorf("Got: %s expected: %s", objString, expected)
+	}
+
+	var objString2 = convertJsonObjectToString(math.Inf(1), false)
+
+	if !strings.Contains(objString2, expected2) {
+		t.Errorf("Got: %s expected: %s", objString2, expected2)
+	}
+
+}
+
 func TestLogObjMethods(t *testing.T) {
 	var expected = ":\n{\n\t\"Value1\": 42,\n\t\"Value2\": true,\n\t\"Value3\": \"Moin\"\n}"
 
-	var log = Init(TRACE_LEVEL, false)
+	var log = Init(TRACE_LEVEL, false, true)
 
 	var exampleObj = Example{
 		Value1: 42,

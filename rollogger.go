@@ -22,12 +22,16 @@ const (
 )
 
 type Log struct {
-	rootLevel int
-	colorLogs bool
-	lastLog   string
+	rootLevel       int
+	colorLogs       bool
+	jsonPrettyPrint bool
+	lastLog         string
 }
 
-func convertJsonObjectToString(object interface{}) string {
+func convertJsonObjectToString(object interface{}, prettyPrint bool) string {
+	if !prettyPrint {
+		return fmt.Sprintf("%+v", object)
+	}
 	var jsonObj, err = json.MarshalIndent(object, "", "\t")
 	if err != nil {
 		return fmt.Sprintf("Error during Marshalling: %s", err.Error())
@@ -35,11 +39,12 @@ func convertJsonObjectToString(object interface{}) string {
 	return fmt.Sprintf(":\n%s", string(jsonObj))
 }
 
-func Init(level int, colorLogs bool) *Log {
+func Init(level int, colorLogs bool, jsonPrettyPrint bool) *Log {
 	return &Log{
-		rootLevel: level,
-		colorLogs: colorLogs,
-		lastLog:   "",
+		rootLevel:       level,
+		colorLogs:       colorLogs,
+		jsonPrettyPrint: jsonPrettyPrint,
+		lastLog:         "",
 	}
 }
 
@@ -51,7 +56,7 @@ func (l *Log) Trace(msg string, args ...interface{}) {
 
 func (l *Log) TraceObj(obj interface{}) {
 	if l.rootLevel >= TRACE_LEVEL {
-		write(TRACE_LEVEL, convertJsonObjectToString(obj), l)
+		write(TRACE_LEVEL, convertJsonObjectToString(obj, l.jsonPrettyPrint), l)
 	}
 }
 
@@ -63,7 +68,7 @@ func (l *Log) Debug(msg string, args ...interface{}) {
 
 func (l *Log) DebugObj(obj interface{}) {
 	if l.rootLevel >= DEBUG_LEVEL {
-		write(DEBUG_LEVEL, convertJsonObjectToString(obj), l)
+		write(DEBUG_LEVEL, convertJsonObjectToString(obj, l.jsonPrettyPrint), l)
 	}
 }
 
@@ -75,7 +80,7 @@ func (l *Log) Info(msg string, args ...interface{}) {
 
 func (l *Log) InfoObj(obj interface{}) {
 	if l.rootLevel >= INFO_LEVEL {
-		write(INFO_LEVEL, convertJsonObjectToString(obj), l)
+		write(INFO_LEVEL, convertJsonObjectToString(obj, l.jsonPrettyPrint), l)
 	}
 }
 
@@ -87,7 +92,7 @@ func (l *Log) Warn(msg string, args ...interface{}) {
 
 func (l *Log) WarnObj(obj interface{}) {
 	if l.rootLevel >= WARN_LEVEL {
-		write(WARN_LEVEL, convertJsonObjectToString(obj), l)
+		write(WARN_LEVEL, convertJsonObjectToString(obj, l.jsonPrettyPrint), l)
 	}
 }
 
@@ -99,7 +104,7 @@ func (l *Log) Error(msg string, args ...interface{}) {
 
 func (l *Log) ErrorObj(obj interface{}) {
 	if l.rootLevel >= ERROR_LEVEL {
-		write(ERROR_LEVEL, convertJsonObjectToString(obj), l)
+		write(ERROR_LEVEL, convertJsonObjectToString(obj, l.jsonPrettyPrint), l)
 	}
 }
 
@@ -113,6 +118,10 @@ func (l *Log) GetLastLog() string {
 
 func (l *Log) SetLogLevel(newLevel int) {
 	l.rootLevel = newLevel
+}
+
+func (l *Log) SetPrettyPrint(newValue bool) {
+	l.jsonPrettyPrint = newValue
 }
 
 func truncateString(maxLength int, msg string) string {
