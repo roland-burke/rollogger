@@ -14,6 +14,8 @@ import (
 	"github.com/roland-burke/rollogger"
 )
 
+var logger *rollogger.Log
+
 type Example struct {
 	Value1 int
 	Value2 bool
