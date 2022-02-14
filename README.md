@@ -1,5 +1,5 @@
 # Rollogger
-![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg)
+![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg) ![Go Report Card](https://goreportcard.com/badge/github.com/roland-burke/rollogger)
 
 Simple Logger written in GO.
 
@@ -15,6 +15,16 @@ In addition to the main log functions there are other Functions to interact with
 | GetCurrentLogLevel() (int, string)   	| Return the current log level as a number and string.					|
 | GetLastLog() string  			| Returns the latest log message, mainly used for testing.				|
 | SetLogLevel(newLevel int)   		| Sets the current log level.								|
+
+Typical Log functions:
+
+| Syntax      | Description |
+| ----------- | ----------- |
+| Trace(msg string, args ...interface{})	| Logs messages for tracing	|
+| Debug(msg string, args ...interface{})   	| Logs debug messages		|
+| Info(msg string, args ...interface{})  	| Logs info messages		|
+| Warn(msg string, args ...interface{}) 	| Logs warning messages		|
+| Error(msg string, args ...interface{}) 	| Logs error messages		|
 
 
 ## Example
