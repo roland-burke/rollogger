@@ -1,4 +1,4 @@
-# Rollogger ![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg) ![Go Report Card](https://goreportcard.com/badge/github.com/roland-burke/rollogger)
+# Rollogger ![Build Status](https://github.com/roland-burke/rollogger/actions/workflows/simple-workflow.yml/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/roland-burke/rollogger/badge.svg?branch=master)](https://coveralls.io/github/roland-burke/rollogger?branch=master) ![Go Report Card](https://goreportcard.com/badge/github.com/roland-burke/rollogger)
 
 This is my logger for go. It is desgined to be small and minimalistic.
 
