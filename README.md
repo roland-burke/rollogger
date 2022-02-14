@@ -41,6 +41,7 @@ func main() {
 		logger.Error("Error log message")
 }
 ```
+![screenshot](https://user-images.githubusercontent.com/56251366/153861030-fd9dbf27-d502-425c-a7cf-59b2597942ea.png)
 
 ## Documentation
 In addition to the main log functions there are other Functions to interact with the logger:
