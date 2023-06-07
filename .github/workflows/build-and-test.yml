@@ -3,10 +3,3 @@ on: [push, pull_request]
 jobs:
   call-build-and-test-workflow:
     uses: roland-burke/workflows/.github/workflows/build-and-test-go.yml@master
-    with:
-      coverage-output-file: coverage.out
-
-    - name: Coveralls
-        uses: shogo82148/actions-goveralls@v1
-        with:
-          path-to-profile: coverage.out
