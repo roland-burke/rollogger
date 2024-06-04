@@ -2,6 +2,7 @@ package rollogger
 
 import (
 	"math"
+	"os"
 	"strings"
 	"testing"
 )
@@ -178,6 +179,16 @@ func TestSetPrettyPrintLogLevel(t *testing.T) {
 	}
 }
 
+func TestSetColorLogs(t *testing.T) {
+	var log = Init(INFO_LEVEL, false, false)
+
+	log.SetColorLogs(true)
+
+	if !log.colorLogs {
+		t.Errorf("Got: %t expected: %t", log.colorLogs, true)
+	}
+}
+
 func TestStringParemeter(t *testing.T) {
 	var log = Init(INFO_LEVEL, false, false)
 	const expected = "with parameter: 42, second"
@@ -278,5 +289,58 @@ func TestLogObjMethods(t *testing.T) {
 	if !strings.Contains(lastError, expected) {
 		t.Errorf("Got: %s expected: %s", lastError, expected)
 	}
+}
 
+func TestSetEnvironmentVariableShouldOverrideLogLevel(t *testing.T) {
+	// Test uppercase
+	os.Setenv("ROLLOGER_LOG_LEVEL", "DEBUG")
+	var log = Init(INFO_LEVEL, false, false)
+
+	level, levelname := log.GetCurrentLogLevel()
+
+	var expectedLevel = 3
+	var expectedLevelName = "DEBUG"
+
+	if strings.Compare(levelname, expectedLevelName) != 0 {
+		t.Errorf("Got: %s expected: %s", levelname, expectedLevelName)
+	}
+
+	if level != expectedLevel {
+		t.Errorf("Got: %d expected: %d", level, expectedLevel)
+	}
+
+	// Test lowercase
+	os.Setenv("ROLLOGER_LOG_LEVEL", "warn")
+	log = Init(INFO_LEVEL, false, false)
+
+	level, levelname = log.GetCurrentLogLevel()
+
+	expectedLevel = 1
+	expectedLevelName = "WARN"
+
+	if strings.Compare(levelname, expectedLevelName) != 0 {
+		t.Errorf("Got: %s expected: %s", levelname, expectedLevelName)
+	}
+
+	if level != expectedLevel {
+		t.Errorf("Got: %d expected: %d", level, expectedLevel)
+	}
+}
+
+func TestSetEnvironmentVariableWrongShouldNotOverrideLogLevel(t *testing.T) {
+	os.Setenv("ROLLOGER_LOG_LEVEL", "someInvalidValue")
+	var log = Init(INFO_LEVEL, false, false)
+
+	level, levelname := log.GetCurrentLogLevel()
+
+	var expectedLevel = 2
+	var expectedLevelName = "INFO"
+
+	if strings.Compare(levelname, expectedLevelName) != 0 {
+		t.Errorf("Got: %s expected: %s", levelname, expectedLevelName)
+	}
+
+	if level != expectedLevel {
+		t.Errorf("Got: %d expected: %d", level, expectedLevel)
+	}
 }

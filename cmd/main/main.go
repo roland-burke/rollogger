@@ -3,10 +3,12 @@ package rollogger
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 )
 
-var LEVEL_NAMES = [5]string{"[ERROR]", "[WARN]", "[INFO]", "[DEBUG]", "[TRACE]"}
+var LEVEL_NAMES = [5]string{"ERROR", "WARN", "INFO", "DEBUG", "TRACE"}
 var LEVEL_COLORS = [5]string{"\033[31m", "\033[33m", "\033[36m", "", ""}
 
 // The higher the number, the noisier the logger is
@@ -40,6 +42,15 @@ func convertJsonObjectToString(object interface{}, prettyPrint bool) string {
 }
 
 func Init(level int, colorLogs bool, jsonPrettyPrint bool) *Log {
+	var logLevelFromEnv = os.Getenv("ROLLOGER_LOG_LEVEL")
+	if strings.Compare(logLevelFromEnv, "") != 0 {
+		for i := 0; i < len(LEVEL_NAMES); i++ {
+			if strings.Compare(LEVEL_NAMES[i], strings.ToUpper(logLevelFromEnv)) == 0 {
+				level = i
+				break
+			}
+		}
+	}
 	return &Log{
 		rootLevel:       level,
 		colorLogs:       colorLogs,
@@ -124,6 +135,10 @@ func (l *Log) SetPrettyPrint(newValue bool) {
 	l.jsonPrettyPrint = newValue
 }
 
+func (l *Log) SetColorLogs(newValue bool) {
+	l.colorLogs = newValue
+}
+
 func truncateString(maxLength int, msg string) string {
 	const offset = 3
 	if maxLength > offset && len(msg) > maxLength+offset {
@@ -133,11 +148,10 @@ func truncateString(maxLength int, msg string) string {
 }
 
 func write(msgLevel int, msg string, l *Log) {
-
 	if l.colorLogs {
-		l.lastLog = fmt.Sprintf("%s %s%-7s\033[0m %s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_COLORS[msgLevel], LEVEL_NAMES[msgLevel], truncateString(MAX_LOG_MSG_LENGTH, msg))
+		l.lastLog = fmt.Sprintf("%s %s[%-7s]\033[0m %s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_COLORS[msgLevel], LEVEL_NAMES[msgLevel], truncateString(MAX_LOG_MSG_LENGTH, msg))
 	} else {
-		l.lastLog = fmt.Sprintf("%s %-7s %s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_NAMES[msgLevel], truncateString(MAX_LOG_MSG_LENGTH, msg))
+		l.lastLog = fmt.Sprintf("%s [%-7s] %s\n", time.Now().Format("02-01-2006 15:04:05.99 MST"), LEVEL_NAMES[msgLevel], truncateString(MAX_LOG_MSG_LENGTH, msg))
 	}
 	fmt.Print(l.lastLog)
 }
