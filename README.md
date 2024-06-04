@@ -20,7 +20,7 @@ Initial release. Added basic features like logging with levels: Trace, Debug, In
 package main
 
 import (
-	"github.com/roland-burke/rollogger"
+	rollogger "github.com/roland-burke/rollogger/cmd/main"
 )
 
 var logger *rollogger.Log
